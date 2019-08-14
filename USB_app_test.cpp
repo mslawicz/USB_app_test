@@ -114,6 +114,7 @@ int main()
                                 std::cout << ", ovr=" << GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE);
                                 while (!GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE));
                                 auto endTime = std::chrono::high_resolution_clock::now();
+                                std::cout << " cnt=" << *dataCount << " err=" << GetLastError();
                                 std::cout << " endTime=" << std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
                             }
                             CloseHandle(fileHandle);
