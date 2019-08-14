@@ -100,22 +100,33 @@ int main()
                                 LPDWORD dataCount = new DWORD;
                                 memset(&overlappedData, 0, sizeof(overlappedData));
                                 overlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-                                //auto result = ReadFile(fileHandle, dataBuffer, 4, dataCount, &overlappedData);
                                 dataBuffer[0] = 1; // report_ID
                                 dataBuffer[1] = 2;
                                 dataBuffer[2] = 3;
                                 auto startTime = std::chrono::high_resolution_clock::now();
-                                auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, &overlappedData); //takes ~200us
+                                auto result = ReadFile(fileHandle, dataBuffer, 65, dataCount, &overlappedData);
+                                //auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, &overlappedData); //takes ~200us
                                 //auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, NULL); // message length must be 1+(no of bytes in report descriptor); takes ~30ms
                                 auto stopTime = std::chrono::high_resolution_clock::now();
                                 // for ReadFile res=0, cnt=0 and err=0x3E5 (ERROR_IO_PENDING) are expected
                                 std::cout << std::dec << ", res=" << result << " cnt=" << *dataCount << " err=" << GetLastError();
                                 std::cout << " wrTime=" << std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime).count();
-                                std::cout << ", ovr=" << GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE);
-                                while (!GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE));
+                                //std::cout << ", ovr=" << GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE);
+                                //while (!GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE));
+                                auto waitResult = WaitForSingleObject(overlappedData.hEvent, 1000);
                                 auto endTime = std::chrono::high_resolution_clock::now();
-                                std::cout << " cnt=" << *dataCount << " err=" << GetLastError();
+                                //std::cout << " cnt=" << *dataCount << " err=" << GetLastError();
+                                std::cout << " res=" << waitResult << " err=" << GetLastError();
                                 std::cout << " endTime=" << std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+                                if (waitResult == WAIT_OBJECT_0)
+                                {
+                                    std::cout << std::endl;
+                                    for (int n = 0; n < 16; n++)
+                                    {
+                                        std::cout << std::hex << (int)dataBuffer[n] << " ";
+                                    }
+                                    std::cout << std::endl;
+                                }
                             }
                             CloseHandle(fileHandle);
                         }
