@@ -4,7 +4,7 @@
 #pragma comment(lib, "SetupAPI.lib")
 
 #include <iostream>
-#include <Windows.h>
+#include "Windows.h"
 #include <hidsdi.h>
 #include <SetupAPI.h>
 #include <chrono>
@@ -100,7 +100,7 @@ int main()
                                 LPDWORD dataCount = new DWORD;
                                 memset(&overlappedData, 0, sizeof(overlappedData));
                                 overlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-                                dataBuffer[0] = 1; // report_ID
+                                dataBuffer[0] = 3; // report_ID
                                 dataBuffer[1] = 2;
                                 dataBuffer[2] = 3;
                                 auto startTime = std::chrono::high_resolution_clock::now();
@@ -113,7 +113,7 @@ int main()
                                 std::cout << " wrTime=" << std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime).count();
                                 //std::cout << ", ovr=" << GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE);
                                 //while (!GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE));
-                                auto waitResult = WaitForSingleObject(overlappedData.hEvent, 1000);
+                                auto waitResult = WaitForSingleObject(overlappedData.hEvent, 5000);
                                 auto endTime = std::chrono::high_resolution_clock::now();
                                 //std::cout << " cnt=" << *dataCount << " err=" << GetLastError();
                                 std::cout << " res=" << waitResult << " err=" << GetLastError();
