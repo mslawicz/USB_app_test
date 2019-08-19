@@ -95,7 +95,7 @@ int main()
                         if (fileHandle != INVALID_HANDLE_VALUE)
                         {
                             std::cout << ", open OK";
-                            if(attributes.VendorID == 0x483)
+                            if((attributes.VendorID == 0x483) && (wcsstr(pDeviceInterfaceDetailData->DevicePath, L"col03")))
                             {
                                 LPDWORD dataCount = new DWORD;
                                 memset(&overlappedData, 0, sizeof(overlappedData));
