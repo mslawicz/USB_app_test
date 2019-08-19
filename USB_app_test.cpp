@@ -104,7 +104,7 @@ int main()
                                 dataBuffer[1] = 2;
                                 dataBuffer[2] = 3;
                                 auto startTime = std::chrono::high_resolution_clock::now();
-                                auto result = ReadFile(fileHandle, dataBuffer, 65, dataCount, &overlappedData);
+                                auto result = ReadFile(fileHandle, dataBuffer, 64, dataCount, &overlappedData);
                                 //auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, &overlappedData); //takes ~200us
                                 //auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, NULL); // message length must be 1+(no of bytes in report descriptor); takes ~30ms
                                 auto stopTime = std::chrono::high_resolution_clock::now();
