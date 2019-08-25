@@ -19,11 +19,13 @@ YokeInterface::YokeInterface() :
     memset(&receiveOverlappedData, 0, sizeof(receiveOverlappedData));
     receiveOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
     receivedDataCount = new DWORD;
+    sendDataCount = new DWORD;
 }
 
 YokeInterface::~YokeInterface()
 {
     delete receivedDataCount;
+    delete sendDataCount;
 }
 
 // check all connected HID devices and open desired USB connection
@@ -187,10 +189,15 @@ bool YokeInterface::isDataReceived(void)
     return (WaitForSingleObject(receiveOverlappedData.hEvent, 0) == WAIT_OBJECT_0);
 }
 
-// send data buffer in asynchronous mode
-void YokeInterface::sendData(void)
+// send user data buffer in asynchronous mode
+void YokeInterface::sendData(uint8_t* dataBuffer)
 {
-    sendBuffer[0] = REPORT_ID;
-    WriteFile(fileHandle, sendBuffer, SendBufferSize, NULL, &sendOverlappedData);
+    // check if previous transmission is completed
+    if (GetOverlappedResult(fileHandle, &sendOverlappedData, sendDataCount, FALSE))
+    {
+        memcpy(sendBuffer + 1, dataBuffer, SendBufferSize - 1);
+        sendBuffer[0] = REPORT_ID;
+        WriteFile(fileHandle, sendBuffer, SendBufferSize, NULL, &sendOverlappedData);
+    }
 }
 

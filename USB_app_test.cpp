@@ -35,11 +35,11 @@ int main()
                 {
                     // send data here
                     static uint8_t cnt = 0;
-                    uint8_t* buffer = nucleoYoke.getSendBuffer();
+                    uint8_t userDataBuffer[63]; // magic number!
                     int val = 0x12345678;
-                    memcpy(buffer+1, &val, sizeof(val));
-                    buffer[1 + sizeof(val)] = ++cnt;
-                    nucleoYoke.sendData();
+                    memcpy(userDataBuffer, &val, sizeof(val));
+                    userDataBuffer[sizeof(val)] = ++cnt;
+                    nucleoYoke.sendData(userDataBuffer);
                 }
             }
         }

@@ -23,7 +23,7 @@ public:
     void receptionEnable(void);
     bool isDataReceived(void);
     void resetReception(void) { ResetEvent(receiveOverlappedData.hEvent); } // clears the reception event (no signals until enabled again)
-    void sendData(void);
+    void sendData(uint8_t* dataBuffer);
 private:
     static const size_t SendBufferSize = 64;
     static const size_t ReceiveBufferSize = 256;
@@ -36,4 +36,5 @@ private:
     OVERLAPPED sendOverlappedData;
     OVERLAPPED receiveOverlappedData;
     LPDWORD receivedDataCount;
+    LPDWORD sendDataCount;
 };
