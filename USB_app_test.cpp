@@ -12,13 +12,13 @@
 int main()
 {
     YokeInterface nucleoYoke;
-    bool err = nucleoYoke.openConnection();
-    if (err)
+    bool opened = nucleoYoke.openConnection(0x483, 0x5710, 3);
+    if (opened)
     {
-        std::cout << "failed to open yoke USB connection" << std::endl;
+        std::cout << "connection to yoke is opened" << std::endl;
     }
     else
     {
-        std::cout << "connection to yoke is opened" << std::endl;
+        std::cout << "failed to open yoke USB connection" << std::endl;
     }
 }
