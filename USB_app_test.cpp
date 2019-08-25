@@ -3,6 +3,7 @@
 
 #include "YokeInterface.h"
 #include <iostream>
+#include <conio.h>
 
 int main()
 {
@@ -12,6 +13,10 @@ int main()
     {
         std::cout << "connection to yoke is opened" << std::endl;
         nucleoYoke.receptionEnable();
+        do
+        {
+
+        } while (!_kbhit());
         nucleoYoke.closeConnection();
     }
     else

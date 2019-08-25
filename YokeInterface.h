@@ -19,6 +19,7 @@ public:
 private:
     static const size_t SendBufferSize = 64;
     static const size_t ReceiveBufferSize = 256;
+    static const size_t ReceivedDataSize = 64;
     uint8_t sendBuffer[SendBufferSize];
     uint8_t receiveBuffer[ReceiveBufferSize];
     GUID hidGuid;       // Human Interface Device

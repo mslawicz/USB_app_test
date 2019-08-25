@@ -168,7 +168,9 @@ void YokeInterface::receptionEnable(void)
     {
         memset(&receiveOverlappedData, 0, sizeof(receiveOverlappedData));
         receiveOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-        auto result = ReadFile(fileHandle, receiveBuffer, 64, receivedDataCount, &receiveOverlappedData);
+        auto result = ReadFile(fileHandle, receiveBuffer, ReceivedDataSize, receivedDataCount, &receiveOverlappedData);
+        // for ReadFile res=0, cnt=0 and err=997 (ERROR_IO_PENDING) are expected      qqq
+        std::cout << std::dec << ", res=" << result << " cnt=" << *receivedDataCount << " err=" << GetLastError() << std::endl; //qqq
     }
     else
     {
