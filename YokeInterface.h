@@ -13,6 +13,7 @@ public:
     YokeInterface();
     ~YokeInterface();
     uint8_t* getSendBuffer(void) const { return const_cast<uint8_t*>(sendBuffer); }
+    uint8_t* getRecieveBuffer(void) const { return const_cast<uint8_t*>(receiveBuffer); }
     bool openConnection(USHORT VID, USHORT PID, uint8_t collection);
     void closeConnection(void);
     void receptionEnable(void);

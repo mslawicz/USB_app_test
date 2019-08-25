@@ -13,14 +13,26 @@ int main()
     {
         std::cout << "connection to yoke is opened" << std::endl;
         nucleoYoke.receptionEnable();
-        do
+        while (1)
         {
             if (nucleoYoke.isDataReceived())
             {
-                std::cout << "new data received!" << std::endl;
+                for (int k = 0; k < 16; k++)
+                {
+                    std::cout << std::hex << (int)(*(nucleoYoke.getRecieveBuffer()+k)) << " ";
+                }
+                std::cout << std::endl;
                 nucleoYoke.receptionEnable();
             }
-        } while (!_kbhit());
+            if (_kbhit())
+            {
+                auto ch = _getch();
+                if (ch == 27)
+                {
+                    break;
+                }
+            }
+        }
         nucleoYoke.closeConnection();
     }
     else
