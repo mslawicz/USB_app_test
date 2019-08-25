@@ -22,11 +22,12 @@ bool YokeInterface::openConnection(void)
 
     // SetupDiGetClassDevs function returns a handle to a device information set that contains requested device information elements for a local computer
     HDEVINFO deviceInfoSet = SetupDiGetClassDevs(&hidGuid, NULL, NULL, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
-    if (deviceInfoSet == INVALID_HANDLE_VALUE)
+    if (deviceInfoSet != INVALID_HANDLE_VALUE)
     {
-        std::cout << ": couldn't get device interface details; error code = " << GetLastError();
+        std::cout << "Invalid handle to device information set, error code=" << GetLastError() << std::endl;
         return false;
     }
+
 
     SP_DEVINFO_DATA deviceInfoData;
     deviceInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
@@ -102,27 +103,23 @@ bool YokeInterface::openConnection(void)
                         std::cout << ", open OK";
                         if ((attributes.VendorID == 0x483) && (wcsstr(pDeviceInterfaceDetailData->DevicePath, L"col03")))
                         {
-                            //LPDWORD rdDataCount = new DWORD;
-                            //LPDWORD wrDataCount = new DWORD;
-                            //memset(&readOverlappedData, 0, sizeof(readOverlappedData));
-                            //memset(&writeOverlappedData, 0, sizeof(writeOverlappedData));
-                            //readOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-                            //writeOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-                            //writeBuffer[0] = 3; // report_ID
-                            //writeBuffer[1] = 0x0A;
-                            //writeBuffer[2] = 0x0B;
+                            //LPDWORD dataCount = new DWORD;
+                            //memset(&overlappedData, 0, sizeof(overlappedData));
+                            //overlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+                            //dataBuffer[0] = 3; // report_ID
+                            //dataBuffer[1] = 2;
+                            //dataBuffer[2] = 3;
                             //auto startTime = std::chrono::high_resolution_clock::now();
-                            //auto rdResult = ReadFile(fileHandle, readBuffer, 64, rdDataCount, &readOverlappedData);
-                            //auto wrResult = WriteFile(fileHandle, writeBuffer, 64, wrDataCount, &writeOverlappedData); //takes ~200us
+                            //auto result = ReadFile(fileHandle, dataBuffer, 64, dataCount, &overlappedData);
+                            ////auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, &overlappedData); //takes ~200us
                             ////auto result = WriteFile(fileHandle, dataBuffer, 65, dataCount, NULL); // message length must be 1+(no of bytes in report descriptor); takes ~30ms
                             //auto stopTime = std::chrono::high_resolution_clock::now();
                             //// for ReadFile res=0, cnt=0 and err=0x3E5 (ERROR_IO_PENDING) are expected
-                            //std::cout << std::dec << ", rRes=" << rdResult << ", wRes=" << wrResult << " wrCnt=" << *wrDataCount << " err=" << GetLastError();
-                            //std::cout << " r-wTime=" << std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime).count();
-                            //std::cout << ", wrOvr=" << GetOverlappedResult(fileHandle, &writeOverlappedData, wrDataCount, FALSE);
-                            //while (!GetOverlappedResult(fileHandle, &writeOverlappedData, wrDataCount, FALSE));
-                            //std::cout << ", WR completed";
-                            //auto waitResult = WaitForSingleObject(readOverlappedData.hEvent, 5000);
+                            //std::cout << std::dec << ", res=" << result << " cnt=" << *dataCount << " err=" << GetLastError();
+                            //std::cout << " wrTime=" << std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime).count();
+                            ////std::cout << ", ovr=" << GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE);
+                            ////while (!GetOverlappedResult(fileHandle, &overlappedData, dataCount, FALSE));
+                            //auto waitResult = WaitForSingleObject(overlappedData.hEvent, 5000);
                             //auto endTime = std::chrono::high_resolution_clock::now();
                             ////std::cout << " cnt=" << *dataCount << " err=" << GetLastError();
                             //std::cout << " res=" << waitResult << " err=" << GetLastError();
@@ -132,7 +129,7 @@ bool YokeInterface::openConnection(void)
                             //    std::cout << std::endl;
                             //    for (int n = 0; n < 16; n++)
                             //    {
-                            //        std::cout << std::hex << (int)readBuffer[n] << " ";
+                            //        std::cout << std::hex << (int)dataBuffer[n] << " ";
                             //    }
                             //    std::cout << std::endl;
                             //}
