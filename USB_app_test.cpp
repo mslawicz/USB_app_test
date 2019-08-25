@@ -4,11 +4,6 @@
 #include "YokeInterface.h"
 #include <iostream>
 
-//uint8_t readBuffer[256];
-//uint8_t writeBuffer[64];
-//OVERLAPPED readOverlappedData;
-//OVERLAPPED writeOverlappedData;
-
 int main()
 {
     YokeInterface nucleoYoke;
@@ -16,6 +11,7 @@ int main()
     if (opened)
     {
         std::cout << "connection to yoke is opened" << std::endl;
+        nucleoYoke.receptionEnable();
         nucleoYoke.closeConnection();
     }
     else

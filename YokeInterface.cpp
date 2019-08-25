@@ -5,23 +5,30 @@
 #include <iostream>
 #include <string>
 
-YokeInterface::YokeInterface()
+YokeInterface::YokeInterface() :
+    sendBuffer(),
+    receiveBuffer(),
+    sendOverlappedData(),
+    receiveOverlappedData()
 {
     hidGuid = CLSID_NULL;
     fileHandle = INVALID_HANDLE_VALUE;
     isOpen = false;
+    memset(&sendOverlappedData, 0, sizeof(sendOverlappedData));
+    sendOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+    receivedDataCount = new DWORD;
 }
 
 YokeInterface::~YokeInterface()
 {
-
+    delete receivedDataCount;
 }
 
 // check all connected HID devices and open desired USB connection
 bool YokeInterface::openConnection(USHORT VID, USHORT PID, uint8_t collection)
 {
     bool found = false;     // mark that the device has been found
-    bool isOpen = false;
+    isOpen = false;
     HidD_GetHidGuid(&hidGuid);
 
     // SetupDiGetClassDevs function returns a handle to a device information set that contains requested device information elements for a local computer
@@ -153,5 +160,19 @@ void YokeInterface::closeConnection(void)
         std::cout << "handle after close=" << fileHandle << std::endl; //qqq
     }
     isOpen = false;
+}
+
+void YokeInterface::receptionEnable(void)
+{
+    if (isOpen)
+    {
+        memset(&receiveOverlappedData, 0, sizeof(receiveOverlappedData));
+        receiveOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+        auto result = ReadFile(fileHandle, receiveBuffer, 64, receivedDataCount, &receiveOverlappedData);
+    }
+    else
+    {
+        std::cout << "cannot read from NOT opened file" << std::endl; //qqq
+    }
 }
 
