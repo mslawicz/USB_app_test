@@ -16,6 +16,8 @@ public:
     bool openConnection(USHORT VID, USHORT PID, uint8_t collection);
     void closeConnection(void);
     void receptionEnable(void);
+    bool isDataReceived(void);
+    void resetReception(void) { ResetEvent(receiveOverlappedData.hEvent); } // clears the reception event (no signals until enabled again)
 private:
     static const size_t SendBufferSize = 64;
     static const size_t ReceiveBufferSize = 256;

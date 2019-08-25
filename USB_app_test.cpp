@@ -15,7 +15,11 @@ int main()
         nucleoYoke.receptionEnable();
         do
         {
-
+            if (nucleoYoke.isDataReceived())
+            {
+                std::cout << "new data received!" << std::endl;
+                nucleoYoke.receptionEnable();
+            }
         } while (!_kbhit());
         nucleoYoke.closeConnection();
     }

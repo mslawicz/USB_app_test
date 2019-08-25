@@ -16,6 +16,8 @@ YokeInterface::YokeInterface() :
     isOpen = false;
     memset(&sendOverlappedData, 0, sizeof(sendOverlappedData));
     sendOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+    memset(&receiveOverlappedData, 0, sizeof(receiveOverlappedData));
+    receiveOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
     receivedDataCount = new DWORD;
 }
 
@@ -150,6 +152,7 @@ bool YokeInterface::openConnection(USHORT VID, USHORT PID, uint8_t collection)
     return isOpen;
 }
 
+// closes connection to the device
 void YokeInterface::closeConnection(void)
 {
     if (fileHandle != INVALID_HANDLE_VALUE)
@@ -162,19 +165,25 @@ void YokeInterface::closeConnection(void)
     isOpen = false;
 }
 
+// enables reception of the incoming data in asynchronous mode
 void YokeInterface::receptionEnable(void)
 {
-    if (isOpen)
+    if (isOpen && (fileHandle != INVALID_HANDLE_VALUE))
     {
-        memset(&receiveOverlappedData, 0, sizeof(receiveOverlappedData));
-        receiveOverlappedData.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
         auto result = ReadFile(fileHandle, receiveBuffer, ReceivedDataSize, receivedDataCount, &receiveOverlappedData);
         // for ReadFile res=0, cnt=0 and err=997 (ERROR_IO_PENDING) are expected      qqq
-        std::cout << std::dec << ", res=" << result << " cnt=" << *receivedDataCount << " err=" << GetLastError() << std::endl; //qqq
+        std::cout << std::dec << "result=" << result << " bytes counter=" << *receivedDataCount << " error=" << GetLastError() << std::endl; //qqq
     }
     else
     {
         std::cout << "cannot read from NOT opened file" << std::endl; //qqq
     }
+}
+
+// return true if received data is signaled
+// this call doesn't reset the signal
+bool YokeInterface::isDataReceived(void)
+{
+    return (WaitForSingleObject(receiveOverlappedData.hEvent, 0) == WAIT_OBJECT_0);
 }
 
