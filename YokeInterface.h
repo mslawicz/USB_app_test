@@ -13,7 +13,7 @@ public:
     YokeInterface();
     ~YokeInterface();
     uint8_t* getSendBuffer(void) const { return const_cast<uint8_t*>(sendBuffer); }
-    void openConnection(void);
+    bool openConnection(void);
 private:
     static const size_t SendBufferSize = 64;
     static const size_t ReceiveBufferSize = 256;

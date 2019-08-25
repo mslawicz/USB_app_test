@@ -2,6 +2,7 @@
 //
 
 #include "YokeInterface.h"
+#include <iostream>
 
 //uint8_t readBuffer[256];
 //uint8_t writeBuffer[64];
@@ -11,5 +12,13 @@
 int main()
 {
     YokeInterface nucleoYoke;
-    nucleoYoke.openConnection();
+    bool err = nucleoYoke.openConnection();
+    if (err)
+    {
+        std::cout << "failed to open yoke USB connection" << std::endl;
+    }
+    else
+    {
+        std::cout << "connection to yoke is opened" << std::endl;
+    }
 }
