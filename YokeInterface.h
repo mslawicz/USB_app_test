@@ -7,6 +7,10 @@
 #include <hidsdi.h>
 //#include <SetupAPI.h>
 
+#define VENDOR_ID   0x483
+#define PRODUCT_ID  0x5710
+#define REPORT_ID   0x03
+
 class YokeInterface
 {
 public:
@@ -19,6 +23,7 @@ public:
     void receptionEnable(void);
     bool isDataReceived(void);
     void resetReception(void) { ResetEvent(receiveOverlappedData.hEvent); } // clears the reception event (no signals until enabled again)
+    void sendData(void);
 private:
     static const size_t SendBufferSize = 64;
     static const size_t ReceiveBufferSize = 256;

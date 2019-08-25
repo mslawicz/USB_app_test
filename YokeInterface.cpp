@@ -187,3 +187,10 @@ bool YokeInterface::isDataReceived(void)
     return (WaitForSingleObject(receiveOverlappedData.hEvent, 0) == WAIT_OBJECT_0);
 }
 
+// send data buffer in asynchronous mode
+void YokeInterface::sendData(void)
+{
+    sendBuffer[0] = REPORT_ID;
+    WriteFile(fileHandle, sendBuffer, SendBufferSize, NULL, &sendOverlappedData);
+}
+
