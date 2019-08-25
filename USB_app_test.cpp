@@ -16,6 +16,7 @@ int main()
     if (opened)
     {
         std::cout << "connection to yoke is opened" << std::endl;
+        nucleoYoke.closeConnection();
     }
     else
     {

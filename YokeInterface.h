@@ -14,6 +14,7 @@ public:
     ~YokeInterface();
     uint8_t* getSendBuffer(void) const { return const_cast<uint8_t*>(sendBuffer); }
     bool openConnection(USHORT VID, USHORT PID, uint8_t collection);
+    void closeConnection(void);
 private:
     static const size_t SendBufferSize = 64;
     static const size_t ReceiveBufferSize = 256;
@@ -21,4 +22,5 @@ private:
     uint8_t receiveBuffer[ReceiveBufferSize]{};
     GUID hidGuid;       // Human Interface Device
     HANDLE fileHandle;
+    bool isOpen;        // true if the device is found and open
 };
