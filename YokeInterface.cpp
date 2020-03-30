@@ -109,7 +109,7 @@ bool YokeInterface::openConnection(USHORT VID, USHORT PID, uint8_t collection)
 
                         if((attributes.VendorID == VID) &&
                             (attributes.ProductID == PID) &&
-                            (wcsstr(pDeviceInterfaceDetailData->DevicePath, collectionStr.c_str())))
+                            ((collection == 0) || wcsstr(pDeviceInterfaceDetailData->DevicePath, collectionStr.c_str())))
                         {
                             // device with proper collection found
                             // Creates or opens a file or I/O device - this time for read/write operations in asynchronous mode
@@ -174,7 +174,7 @@ void YokeInterface::receptionEnable(void)
     {
         auto result = ReadFile(fileHandle, receiveBuffer, ReceivedDataSize, receivedDataCount, &receiveOverlappedData);
         // for ReadFile res=0, cnt=0 and err=997 (ERROR_IO_PENDING) are expected      qqq
-        std::cout << std::dec << "result=" << result << " bytes counter=" << *receivedDataCount << " error=" << GetLastError() << std::endl; //qqq
+        std::cout << std::dec << "read result=" << result << " bytes counter=" << *receivedDataCount << " error=" << GetLastError() << std::endl; //qqq
     }
     else
     {
@@ -195,9 +195,12 @@ void YokeInterface::sendData(uint8_t* dataBuffer)
     // check if previous transmission is completed
     if (GetOverlappedResult(fileHandle, &sendOverlappedData, sendDataCount, FALSE))
     {
-        memcpy(sendBuffer + 1, dataBuffer, SendBufferSize - 1);
-        sendBuffer[0] = REPORT_ID;
+        memcpy(sendBuffer, dataBuffer, SendBufferSize);
         WriteFile(fileHandle, sendBuffer, SendBufferSize, NULL, &sendOverlappedData);
+    }
+    else
+    {
+        std::cout << "GetOverlappedResult error=" << GetLastError() << std::endl;
     }
 }
 

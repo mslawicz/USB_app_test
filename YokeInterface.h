@@ -8,7 +8,7 @@
 //#include <SetupAPI.h>
 
 #define VENDOR_ID   0x483
-#define PRODUCT_ID  0x5710
+#define PRODUCT_ID  0x5750
 #define REPORT_ID   0x03
 
 class YokeInterface
@@ -24,10 +24,10 @@ public:
     bool isDataReceived(void);
     void resetReception(void) { ResetEvent(receiveOverlappedData.hEvent); } // clears the reception event (no signals until enabled again)
     void sendData(uint8_t* dataBuffer);
+    static const size_t SendBufferSize = 65;    // report id (0) + 64 bytes of payload to be sent
 private:
-    static const size_t SendBufferSize = 64;
-    static const size_t ReceiveBufferSize = 256;
-    static const size_t ReceivedDataSize = 64;
+    static const size_t ReceiveBufferSize = 260;
+    static const size_t ReceivedDataSize = 65;    // report id (0) + 64 bytes received from device
     uint8_t sendBuffer[SendBufferSize];
     uint8_t receiveBuffer[ReceiveBufferSize];
     GUID hidGuid;       // Human Interface Device

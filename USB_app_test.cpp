@@ -8,7 +8,7 @@
 int main()
 {
     YokeInterface nucleoYoke;
-    bool opened = nucleoYoke.openConnection(VENDOR_ID, PRODUCT_ID, REPORT_ID);
+    bool opened = nucleoYoke.openConnection(VENDOR_ID, PRODUCT_ID, 0 /*REPORT_ID*/);
     if (opened)
     {
         std::cout << "connection to yoke is opened" << std::endl;
@@ -35,10 +35,11 @@ int main()
                 {
                     // send data here
                     static uint8_t cnt = 0;
-                    uint8_t userDataBuffer[63]; // magic number!
+                    uint8_t userDataBuffer[YokeInterface::SendBufferSize];
+                    userDataBuffer[0] = 0;      // report id 0 is not being sent to device
                     int val = 0x12345678;
-                    memcpy(userDataBuffer, &val, sizeof(val));
-                    userDataBuffer[sizeof(val)] = ++cnt;
+                    memcpy(userDataBuffer+1, &val, sizeof(val));
+                    userDataBuffer[sizeof(val)+1] = ++cnt;
                     nucleoYoke.sendData(userDataBuffer);
                 }
             }
