@@ -200,7 +200,7 @@ void YokeInterface::sendData(uint8_t* dataBuffer)
     }
     else
     {
-        std::cout << "GetOverlappedResult error=" << GetLastError() << std::endl;
+        std::cout << "GetOverlappedResult error=" << std::dec << GetLastError() << std::endl;
     }
 }
 
