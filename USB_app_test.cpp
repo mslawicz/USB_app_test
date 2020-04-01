@@ -23,13 +23,6 @@ int main()
                 }
                 std::cout << std::endl;
                 nucleoYoke.receptionEnable();
-
-                //extra test
-                uint8_t userDataBuffer[YokeInterface::SendBufferSize];
-                userDataBuffer[0] = REPORT_ID;
-                int val = 0x12345678;
-                memcpy(userDataBuffer + 1, &val, sizeof(val));
-                nucleoYoke.sendData(userDataBuffer);
             }
             if (_kbhit())
             {
@@ -41,12 +34,12 @@ int main()
                 if (ch == 115) // 's'
                 {
                     // send data here
-                    static uint8_t cnt = 0;
                     uint8_t userDataBuffer[YokeInterface::SendBufferSize];
                     userDataBuffer[0] = REPORT_ID;
-                    int val = 0x12345678;
-                    memcpy(userDataBuffer+1, &val, sizeof(val));
-                    userDataBuffer[sizeof(val)+1] = ++cnt;
+                    float fval = 0.5f;
+                    memcpy(userDataBuffer+4, &fval, sizeof(fval));
+                    fval = 0.2f;
+                    memcpy(userDataBuffer + 8, &fval, sizeof(fval));
                     nucleoYoke.sendData(userDataBuffer);
                 }
             }
